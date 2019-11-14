@@ -3,11 +3,9 @@ import express from "express";
 import socketIO from "socket.io";
 import logger from "morgan";
 import socketController from "./socketController";
-import events from "./events";
 import ejs from "ejs";
 import SerialPort from "serialport";
 import Readline from "@serialport/parser-readline";
-import { write } from "fs";
 
 const PORT = 4000;
 const app = express();
@@ -16,9 +14,7 @@ app.set("view engine", "html");
 app.set("views", join(__dirname, "views"));
 app.use(logger("dev"));
 app.use(express.static(join(__dirname, "static")));
-app.get("/", (req, res) =>
-  res.render("home", { events: JSON.stringify(events) })
-);
+app.get("/", (req, res) => res.render("home"));
 
 const handleListening = () =>
   console.log(`✅ Server running: http://localhost:${PORT}`);
@@ -27,12 +23,41 @@ const server = app.listen(PORT, handleListening);
 
 const io = socketIO.listen(server);
 
-io.on("connection", socket => socketController(socket, io));
-
-export const comPort = new SerialPort("COM6", {
-  baudRate: 57600
+io.on("connection", socket => {
+  const {
+    headers: { origin }
+  } = socket.client.conn.request;
+  console.log(origin, socket.id, "client connected");
+  socketController(socket, io);
 });
 
-const parser = new Readline();
-comPort.pipe(parser);
-parser.on("data", console.log);
+// linux : /dev/ttyACM0
+export const framePort = new SerialPort("COM7", {
+  baudRate: 9600
+});
+
+export const cameraPort = new SerialPort("COM6", {
+  baudRate: 9600
+});
+
+framePort.on("error", err => {
+  console.log(err.message);
+});
+
+cameraPort.on("error", err => {
+  console.log(err.message);
+});
+
+const parser1 = new Readline();
+framePort.pipe(parser1);
+parser1.on("data", data => {
+  console.log(data);
+  io.emit("displaySerial1", data);
+});
+
+const parser2 = new Readline();
+cameraPort.pipe(parser2);
+parser2.on("data", data => {
+  console.log(data);
+  io.emit("displaySerial2", data);
+});

@@ -18,5 +18,26 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/sketch.js"></script>
   </head>
-  <body></body>
+  <body>
+    <div style="display: flex;">
+      <iframe
+        id="faceapi"
+        src="http://localhost:5000"
+        width="34%"
+        height="470"
+        scrolling="no"
+        frameborder="0"
+        allow="camera"
+      ></iframe>
+      <iframe
+        id="posenet"
+        src="http://localhost:8000"
+        width="66%"
+        height="470"
+        scrolling="no"
+        frameborder="0"
+        allow="camera"
+      ></iframe>
+    </div>
+  </body>
 </html>
