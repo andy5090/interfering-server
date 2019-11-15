@@ -99,7 +99,7 @@ function draw() {
   textSize(30);
   fill(255);
   text(nf(score, 1, 2), numPoints, height / 2 + 15);
-  textSize(15);
+  textSize(12);
   fill(255);
   text("Positive", numPoints + 2, 10);
   text("Negative", numPoints + 2, height - 5);

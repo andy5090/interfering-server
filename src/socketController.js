@@ -200,6 +200,8 @@ const socketController = (socket, io) => {
     }
   });
 
+  let ticktock = true;
+
   socket.on("getDetections", detections => {
     io.emit("displayDetections", detections);
 
@@ -249,27 +251,17 @@ const socketController = (socket, io) => {
       const timeNow = new Date().getTime();
       if (timeNow - nonDetectedTime > 900000) {
         nonDetectedTime = new Date().getTime();
-        cameraPort.write("I");
+        cameraPort.write("O");
         setTimeout(() => {
           cameraPort.write("Z");
           setTimeout(() => {
-            cameraPort.write("O");
+            if (ticktock) cameraPort.write("L");
+            else cameraPort.write("R");
+            ticktock = !ticktock;
             setTimeout(() => {
-              cameraPort.write("Z");
-              setTimeout(() => {
-                cameraPort.write("L");
-                setTimeout(() => {
-                  cameraPort.write("S");
-                  setTimeout(() => {
-                    cameraPort.write("R");
-                    setTimeout(() => {
-                      cameraPort.write("S");
-                    }, 700);
-                  }, 2000);
-                }, 600);
-              }, 3000);
-            }, 1000);
-          }, 3000);
+              cameraPort.write("S");
+            }, 800);
+          }, 5000);
         }, 1000);
       }
     }
