@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The interfering server</title>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>   
+  </head>
+  <body>
+    <div style="display: flex;">      
+      <iframe
+        id="posenet"
+        src="http://localhost:3000"
+        width="800"
+        height="300"
+        scrolling="no"
+        frameborder="0"
+        allow="camera"
+      ></iframe>
+    </div>
+    <div style="display: flex;">
+      <iframe
+        id="faceapi"
+        src="http://localhost:5000"
+        width="400"
+        height="300"
+        scrolling="no"
+        frameborder="0"
+        allow="camera"
+      ></iframe>
+      <iframe
+        id="display"
+        src="http://localhost:4000/display.html"
+        width="400"
+        height="300"
+        scrolling="no"
+        frameborder="0"        
+      ></iframe>
+    </div>
+  </body>
+</html>
