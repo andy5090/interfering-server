@@ -54,12 +54,11 @@ function draw() {
   background(20);
 
   const scoreColor = lerpColor(negativeColor, positiveColor, score);
-
-  noFill();
-  strokeWeight(100);
+  
+  noStroke();
 
   for (let i = 0; i < numPoints; i++) {
-    const currentY = height / 2 - floor((score - 0.5) * (height - 100));
+    const currentY = height / 2 - floor((score - 0.5) * height);
 
     if (i > 0) {
       if (currentY !== points[i - 1].y) {
@@ -78,31 +77,37 @@ function draw() {
         points.push({ x: i, y: currentY, c: scoreColor });
       }
     }
-    stroke(points[i].c);
-    point(points[i].x, points[i].y);
+    fill(points[i].c);
+    if(points[i].y < height / 2)
+      rect(points[i].x, points[i].y, 1, height/2 - points[i].y);
+    else 
+      rect(points[i].x, height / 2, 1, points[i].y - height / 2);
   }
   if (numPoints < (width / 2)) {
-    numPoints += 2;
+    numPoints+=2;
   } else {
     points = [];
     numPoints = 0;
   }
 
-  noStroke();
+  
+  
   fill(255, 255, 255, 100);
-  textSize(40);
-  const rectWidth = floor(textWidth("0.00"));
-  rect(numPoints, 0, rectWidth, height);
+  rect(numPoints, 0, 2, height);
 
-  fill(scoreColor);
-  text(nf(score, 1, 2), numPoints, height / 2);
-  textSize(20);
+  textAlign(RIGHT);
+  textSize(30);
   fill(255);
-  text("Positive", numPoints, 20);
-  text("Negative", numPoints, height - 10);
+  text(nf(score, 1, 2), numPoints, height / 2 + 15);
+  textSize(15);
+  fill(255);
+  text("Positive", numPoints + 2, 10);
+  text("Negative", numPoints + 2, height - 5);
 
-  const text_X = (width / 2) + rectWidth;
+  const text_X = (width / 2);
   let text_Y = textLead;
+
+  textAlign(LEFT);
 
   text("** The Interfering Status **", text_X, text_Y);
   text_Y += textLead;
@@ -136,7 +141,7 @@ function draw() {
   }
 }
 
-function mouseClicked() {
-  let fs = fullscreen();
-  fullscreen(!fs);
-}
+// function mouseClicked() {
+//   let fs = fullscreen();
+//   fullscreen(!fs);
+// }
